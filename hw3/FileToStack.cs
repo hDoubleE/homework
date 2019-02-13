@@ -12,7 +12,7 @@ namespace DataStructures
             string readPath = "/your_path/here/input.txt";
             string writePath = "/Users/trevorheehs/";
 
-
+            // Throw exception if no file found.
             if (!File.Exists(readPath))
             {
                 throw new ArgumentException("File not found.");

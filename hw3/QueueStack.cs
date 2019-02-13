@@ -1,40 +1,46 @@
 using System;
 
-namespace DataStructures
+
+
+
+namespace Homework3_Problem3
 {
     public class Program
     {
         static void Main()
         {
-            LinkedQueue<int> que = new LinkedQueue<int>();
-            que.Enqueue(9);
-            que.Enqueue(16);
-            que.Enqueue(20);
-            que.Enqueue(32);
-            Console.WriteLine("Print original Queue:");
-            que.Print();
-            Console.WriteLine();
-            Console.WriteLine("After calling Queue.Reverse() method:");
-            que.ReverseQueue();
-            que.Print();
+            // Create Q, based on two stacks.
+            StackedQueue<int> Q = new StackedQueue<int>();
+
+            // Loop to fill Q with odd nums.
+            for (int i = 1; i < 10; i += 2)
+            {
+                Q.Enqueue(i);
+            }
+
+            // Print.
+            Q.Print();
+            // Dequeue.
+            Q.Dequeue();
+            Q.Dequeue();
+            // Print.
+            Q.Print();
+
+            // The Upshot: Enquue is exspensive if stack is full. O(2n) or O(n).
+            // Pop all into holding stack. Add one item to bottom. Pop all items back onto stack.
+            // Dequeue is O(1), just Pop from main stack. 
+            // Print inherits from Linked list using .next, so O(n).
         }
     }
 
     /// <summary>
-    /// Represents a linked list based queue structure.
+    /// Represents a linked list based queue data structure.
     /// </summary>
     /// <typeparam name="T">The stored data type.</typeparam>
-    public class LinkedQueue<T>
+    public class StackedQueue<T>
     {
-        /// <summary>
-        /// The head (first) node of the linked queue.
-        /// </summary>
-        internal Node First { get; set; }
-
-        /// <summary>
-        /// The tail (last) node of the linked queue.
-        /// </summary>
-        internal Node Last { get; set; }
+        LinkedStack<T> mainStack = new LinkedStack<T>();
+        LinkedStack<T> tempStack = new LinkedStack<T>();
 
         /// <summary>
         /// Gets the number of elements in the queue.
@@ -45,7 +51,10 @@ namespace DataStructures
         /// Creates a new instance of the queue class that is empty and has default capacity.
         /// Default constructor is not required as it's implicit.
         /// </summary>
-        public LinkedQueue() { }
+        public StackedQueue()
+        {
+            Count = 0;
+        }
 
         /// <summary>
         /// Adds an item at the end of the queue.
@@ -53,25 +62,26 @@ namespace DataStructures
         /// <param name="item">The item to add at the end of the queue. The value can be null for reference types.</param>
         public void Enqueue(T item)
         {
-            Count++;
-
-            if (Last == null)
+            if (IsEmpty())
             {
-                First = new Node(item, null);
-                Last = First;
+                mainStack.Push(item);
+                Count++;
             }
             else
             {
-                var newNode = new Node(item, null);
-                Last.Next = newNode;
-                Last = newNode;
+                EmptyMainFillTemp();
+
+                mainStack.Push(item);
+                Count++;
+
+                EmptyTempFillMain();
             }
         }
 
         /// <summary>
-        /// Removes and returns the item at the beginning of the queue.
+        /// Dequeue is just Pop from primary stack.
         /// </summary>
-        /// <returns>The item removed from the beginning of the queue.</returns>
+        /// <returns>The value of item being popped.</returns>
         public T Dequeue()
         {
 
@@ -79,11 +89,10 @@ namespace DataStructures
 
             Count--;
 
-            T temp = First.Value;
-            First = First.Next;
-            if (First == null) Last = null;
-
-            return temp;
+            T item = mainStack.Peek();
+            mainStack.Pop();
+            Count--;
+            return item;
         }
 
 
@@ -96,40 +105,7 @@ namespace DataStructures
             if (Count == 0)
                 throw new InvalidOperationException("Queue is empty.");
 
-            return First.Value;
-        }
-
-        public LinkedQueue<T> ReverseQueue()
-        {
-            if (IsEmpty()) throw new InvalidOperationException("Queue is empty.");
-
-            LinkedQueue<T> q = this;
-
-            var tempStack = QueueToStack(q);
-
-            while (!tempStack.IsEmpty())
-            {
-                T popped = tempStack.Peek();
-                tempStack.Pop();
-                q.Enqueue(popped);
-            }
-
-            return q;
-        }
-
-        public LinkedStack<T> QueueToStack(LinkedQueue<T> q)
-        {
-            LinkedStack<T> s = new LinkedStack<T>();
-            Node current = q.First;
-            while (current.Next != null)
-            {
-                Node removed = current;
-                s.Push(removed.Value);
-                q.Dequeue();
-                current = current.Next;
-            }
-
-            return s;
+            return mainStack.Peek();
         }
 
         /// <summary>
@@ -137,21 +113,52 @@ namespace DataStructures
         /// </summary>
         public void Print()
         {
-            Node current = First;
-            while (current != null)
+            if (IsEmpty())
             {
-                Console.Write($"{current.Value} <- ");
-                current = current.Next;
+                Console.WriteLine("The queue is empty.");
+                return;
             }
-            Console.Write("Last");
-            Console.WriteLine();
+            mainStack.Print();
         }
 
         /// <summary>
-        /// Determines if Queue is Empty.
+        /// Determines if mainStack is Empty.
         /// </summary>
         /// <returns>Bool if list empty.</returns>
-        public bool IsEmpty() => First == null;
+        public bool IsEmpty()
+        {
+            return mainStack.Count == 0;
+        }
+
+        /// <summary>
+        /// Empties the primary stack and fills the temp stack.
+        /// </summary>
+        private void EmptyMainFillTemp()
+        {
+            while (mainStack.Count > 0)
+            {
+                // Empty mainStack.
+                var temp = mainStack.Peek();
+                mainStack.Pop();
+                // Fill mainStack.
+                tempStack.Push(temp);
+            }
+        }
+
+        /// <summary>
+        /// Empties the temp stack and fills the primary stack.
+        /// </summary>
+        private void EmptyTempFillMain()
+        {
+            while (tempStack.Count > 0)
+            {
+                // Empty tempStack.
+                var temp2 = tempStack.Peek();
+                tempStack.Pop();
+                // Fill mainStack.
+                mainStack.Push(temp2);
+            }
+        }
 
         /// <summary>
         /// Repesents a node in the queue.
@@ -252,7 +259,7 @@ namespace DataStructures
             Node current = Top;
             while (current != null)
             {
-                Console.WriteLine($"| {current.Value} |");
+                Console.Write($"{current.Value} ");
                 current = current.Next;
             }
             Console.WriteLine();

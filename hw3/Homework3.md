@@ -22,8 +22,10 @@ Problem 1 [25 points] Let Q be a non-empty queue, and let S be an empty stack.
 Write a C# program that reverses the order of the elements in Q, using S.
 For example, if initially the order of the objects in Q is 1,2,3,4,5,6, then after reversing the objects, the order of the objects in Q is 6,5,4,3,2,1.
 
-Problem 2 [25 points] Write a program that opens a text file (“input.txt”) and reads its contents. 
-Then using a stack it reverses the lines of the file and saves them into another file (“output.txt”). 
+Problem 2 [25 points] Write a program that opens a text file (“input.txt”) and reads its contents.
+Then using a stack it reverses the lines of the file and saves them into another file (“output.txt”).
 Hint: use System.IO.File.WriteAllLines and System.IO.File.ReadAllLines,
 
 Problem 3 [50 points] Implement a Queue class using two stacks (use the side images as hints - see the class notes). What is the running time for enqueue() and dequeue()?
+
+Extra Points: Implement these three Queue/Stack problems using library.

@@ -1,28 +1,38 @@
 using System;
 
+// Problem 1: (Not Extra) Reverse Queue using Stack. Use implemented Queue data structure, based on implemented Linked List.
+
 namespace DataStructures
 {
     public class Program
     {
         static void Main()
         {
-            LinkedQueue<int> que = new LinkedQueue<int>();
-            que.Enqueue(9);
-            que.Enqueue(16);
-            que.Enqueue(20);
-            que.Enqueue(32);
-            Console.WriteLine("Print original Queue:");
-            que.Print();
+            LinkedQueue<int> Q = new LinkedQueue<int>();
 
-            Console.WriteLine();
+            // Loop to enqueue nums...
+            for (int i = 1; i < 7; i++)
+            {
+                Q.Enqueue(i);
+            }
 
-            Console.WriteLine("After calling Queue.Reverse() method:");
-            que.ReverseQueue();
-            que.Print();
+            Console.WriteLine("Print Original Queue:");
+            Q.Print();
 
-            // The Upshot: The Queue.Reverse() method runs in O(n) time with O(n) space required.
-            // Each of the two functions is O(n) time -> O(2n) for both, so still linear time.
-            // I modularized the Reverse() code into two separate functions.
+            Console.WriteLine(); // Newline.
+
+
+            // This method below is the where the magic happens...go to definition below.
+            // Reverses Queue using stack...
+            Q.ReverseQueue();
+
+            Console.WriteLine("Print Reversed Queue:");
+
+            Q.Print();
+
+            // The Upshot: The ReverseQueue() method runs in O(n) time with O(n) space required.
+            // Really it's O(2n) time -> O(n), so still linear time.
+            // I modularized the Reverse() method into two separate functions using generics.
         }
     }
 
@@ -114,37 +124,36 @@ namespace DataStructures
         {
             if (IsEmpty()) throw new InvalidOperationException("Queue is empty.");
 
-            LinkedQueue<T> q = this;
+            LinkedQueue<T> Q = this;
 
-            var tempStack = QueueToStack(q);
+            var tempStack = QueueToStack(Q);
 
             while (!tempStack.IsEmpty())
             {
                 T popped = tempStack.Peek();
                 tempStack.Pop();
-                q.Enqueue(popped);
+                Q.Enqueue(popped);
             }
-
-            return q;
+            return Q;
         }
 
         /// <summary>
         /// Takes input queue and pushes items onto stack.
         /// </summary>
-        /// <returns>The stack with queue items.</returns>
-        /// <param name="q">Original queue.</param>
-        public LinkedStack<T> QueueToStack(LinkedQueue<T> q)
+        /// <returns> The stack containing queue items.</returns>
+        /// <param name="Q">Original queue.</param>
+        public LinkedStack<T> QueueToStack(LinkedQueue<T> Q)
         {
-            LinkedStack<T> s = new LinkedStack<T>();
-            Node current = q.First;
+            LinkedStack<T> S = new LinkedStack<T>();
+            Node current = Q.First;
             while (current.Next != null)
             {
                 Node removed = current;
-                s.Push(removed.Value);
-                q.Dequeue();
+                S.Push(removed.Value);
+                Q.Dequeue();
                 current = current.Next;
             }
-            return s;
+            return S;
         }
 
         /// <summary>

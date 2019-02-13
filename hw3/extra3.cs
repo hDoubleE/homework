@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-// Problem 3 [extra points] Implement a Queue class using two stacks. 
+// Problem 3 [extra point] Implement a Queue class using two stacks. 
 // What is the running time for enqueue() and dequeue()?
+// Uses C# class library for stack, not queue. 
 
 
-namespace hw3_extra3
+namespace DataStructures
 {
     public class Program
     {
@@ -12,10 +13,16 @@ namespace hw3_extra3
         {
             StackedQueue<int> s = new StackedQueue<int>();
 
+            // Enqueue three items
+            // Enqueue is O(2n), one itteration to fill stack, one to empty back on. 
             s.Enqueue(1);
             s.Enqueue(2);
             s.Enqueue(3);
+
             s.Print();
+
+            // Dequeue and print items.
+            // Dequeue is O(1), pop operation.
             s.Dequeue();
             s.Print();
             s.Dequeue();
@@ -28,6 +35,9 @@ namespace hw3_extra3
 
     public class StackedQueue<T>
     {
+        /// <summary>
+        /// Declare two stacks using C# Class Library.
+        /// </summary>
         Stack<T> mainStack = new Stack<T>();
         Stack<T> tempStack = new Stack<T>();
 
@@ -99,9 +109,8 @@ namespace hw3_extra3
         }
 
         /// <summary>
-        /// Prints contents of stack in queue format.
-        /// Inherits loop functionality from library stack class.
-        /// O(n)
+        /// Prints in queue format. More of a queue than a stack method.
+        /// Inherits Node.Next functionality from Linked Stack class.
         /// </summary>
         public void Print()
         {
@@ -110,19 +119,18 @@ namespace hw3_extra3
                 Console.WriteLine("The queue is empty.");
                 return;
             }
-
             foreach (var i in mainStack)
             {
                 Console.Write($"{i} <-");
             }
             Console.WriteLine("Last");
         }
-        
+
         /// <summary>
         /// Determines if primary stack is Empty.
         /// </summary>
         /// <returns>Bool if list empty.</returns>
-        public bool IsEmpty() 
+        public bool IsEmpty()
         {
             return mainStack.Count == 0;
         }
