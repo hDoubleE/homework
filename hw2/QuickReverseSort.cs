@@ -40,6 +40,7 @@ namespace Sorting
         {
             QuickReverseSort(arr, 0, arr.Length - 1);
         }
+        
         static void QuickReverseSort(string[] arr, int leftIndex, int rightIndex)
         {
             if (leftIndex < rightIndex) // At least two elements.
