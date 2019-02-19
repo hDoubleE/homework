@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataStructures.BST
 {
@@ -17,37 +14,50 @@ namespace DataStructures.BST
             Student David = new Student("David", "Undecided", "Massachusetts");
             Student Anne = new Student("Anne", "Mathematics", "Florida");
             Student Sally = new Student("Sally", "Computer Science", "California");
-
+            Student Fred = new Student("Fred");
+            Student Ramone = new Student("Ramone");
+            Student Yara = new Student("Yara");
+            Student Zalea = new Student("Zalea");
 
             BinarySearchTree<Student> students = new BinarySearchTree<Student>()
             {
-                Sally,
                 Jean,
                 David,
                 Paul,
+                Zalea,
+                Fred,
+                Sally,
                 Anne,
-                Trevor
+                Trevor,
+                Ramone,
+                Yara
             };
 
-            foreach (Student s in students)
-            {
-                Console.WriteLine(s.Name);
-            }
+            int height = students.Height(students.Root);
+            Console.WriteLine(height);
 
-            students.PrintPreorder(students.Root);
+            int leaves = students.CountLeafNodes(students.Root);
+            Console.WriteLine(leaves);
+
+            bool result = students.Contains(Fred);
+            Console.WriteLine(result);
+
+            students.Remove(Fred);
+            Console.WriteLine();
+
+            students.PrintInorder(students.Root);
         }
     }
 
     /// <summary>
     /// Represents a student
     /// </summary>
-    public class Student : BinarySearchTreeNode<Student>, IComparable
+    public class Student : IComparable
     {
         // Properties of Student class.
         public string Name { get; set; }
         public string Major { get; set; }
         public string State { get; set; }
-        public override Student Value { get; internal set; }
         public string GetName()
         {
             return this.Name;
@@ -59,11 +69,21 @@ namespace DataStructures.BST
         /// <param name="name">Name.</param>
         /// <param name="major">Major.</param>
         /// <param name="state">State.</param>
-        public Student(string name, string major, string state) : base(value: name)
+        public Student(string name, string major, string state)
         {
             Name = name;
             Major = major;
             State = state;
+        }
+        /// <summary>
+        /// Initializes a new instance of the Student class with Name only.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        public Student(string name)
+        {
+            Name = name;
+            //Major = null;
+            //State = null;
         }
 
         public int CompareTo(object obj)
@@ -75,6 +95,11 @@ namespace DataStructures.BST
 
             // And if you wanted to do the comparison by eg age:
             // return this.age.CompareTo(compareToObj.age);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 
@@ -271,7 +296,8 @@ namespace DataStructures.BST
         }
 
         /// <summary>
-        /// Finds the min node in the subtree and returns the root of the new subtree
+        /// Finds the min node in the subtree and returns the root of the new subtree.
+        /// Helper function to Remove method.
         /// </summary>
         private BinarySearchTreeNode<T> FindAndRemoveMin(BinarySearchTreeNode<T> subtreeRoot, ref BinarySearchTreeNode<T> min)
         {
@@ -323,7 +349,28 @@ namespace DataStructures.BST
             return false;
         }
 
-        public void PrintPreorder(BinarySearchTreeNode<Student> root)
+        public int CountLeafNodes(BinarySearchTreeNode<T> root)
+        {
+            if (root == null) return 0;
+            if (root.Left == null && root.Right == null) return 1;
+            else
+            {
+                return CountLeafNodes(root.Left) + CountLeafNodes(root.Right);
+            }
+        }
+
+        public int Height(BinarySearchTreeNode<T> root)
+        {
+            if (root == null) return 0;
+
+            int leftHeight = Height(root.Left);
+            int rightHeight = Height(root.Right);
+
+            return Math.Max(leftHeight, rightHeight) + 1;
+        }
+
+
+        public void PrintPreorder(BinarySearchTreeNode<T> root)
         {
             if (root != null)
             {
@@ -352,6 +399,7 @@ namespace DataStructures.BST
                 Console.WriteLine(root.Value);
             }
         }
+
         /// <summary>
         /// Removes all elements from the Binary Search Tree.
         /// </summary>
