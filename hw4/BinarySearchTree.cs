@@ -8,6 +8,7 @@ namespace DataStructures.BST
     {
         static void Main(string[] args)
         {
+            // Create student object:
             Student Trevor = new Student("Trevor", "Computer Science", "New York");
             Student Jean = new Student("Jean", "Mathematics", "West Virginia");
             Student Paul = new Student("Paul", "Data Science", "Georgia");
@@ -19,6 +20,7 @@ namespace DataStructures.BST
             Student Yara = new Student("Yara");
             Student Zalea = new Student("Zalea");
 
+            // Populate BST:
             BinarySearchTree<Student> students = new BinarySearchTree<Student>()
             {
                 Jean,
@@ -26,26 +28,45 @@ namespace DataStructures.BST
                 Paul,
                 Zalea,
                 Fred,
-                Sally,
                 Anne,
                 Trevor,
                 Ramone,
                 Yara
             };
 
-            int height = students.Height(students.Root);
-            Console.WriteLine(height);
+            // Add method runs in average O(log n) to "find" correct insert position.
+            // Worst case O(n) for unbalanced tree.
+            students.Add(new Student("Sally", "Computer Science", "California"));
 
+
+            // Height method runs in O(h), where h is the height of Binary Tree.
+            int height = students.Height(students.Root);
+            Console.WriteLine($"Height of BST: {height}");
+
+            // Count leaves method runs in O(h), where h is the height of Binary Tree.
             int leaves = students.CountLeafNodes(students.Root);
-            Console.WriteLine(leaves);
+            Console.WriteLine($"Number of leaves in BST: {leaves}");
+
 
             bool result = students.Contains(Fred);
-            Console.WriteLine(result);
+            Console.WriteLine($"Result of Find in BST: {result}");
 
+            // Remove method runs in average O(log n) to "find" correct insert position.
+            // Worst case O(n) for unbalanced tree.
             students.Remove(Fred);
             Console.WriteLine();
 
+            // All print methods, preorder, inorder, postorder, run in O(n) time, touch each node in tree.
+            Console.WriteLine("Pre order:");
+            students.PrintPreorder(students.Root);
+            Console.WriteLine();
+
+            Console.WriteLine("In order:");
             students.PrintInorder(students.Root);
+            Console.WriteLine();
+
+            Console.WriteLine("Post order:");
+            students.PrintPostorder(students.Root);
         }
     }
 
@@ -58,10 +79,6 @@ namespace DataStructures.BST
         public string Name { get; set; }
         public string Major { get; set; }
         public string State { get; set; }
-        public string GetName()
-        {
-            return this.Name;
-        }
 
         /// <summary>
         /// Initializes a new instance of the Student class.
@@ -75,6 +92,7 @@ namespace DataStructures.BST
             Major = major;
             State = state;
         }
+
         /// <summary>
         /// Initializes a new instance of the Student class with Name only.
         /// </summary>
@@ -85,7 +103,11 @@ namespace DataStructures.BST
             //Major = null;
             //State = null;
         }
-
+        /// <summary>
+        /// Compares Names to order BST. Inherits from IComparable.
+        /// </summary>
+        /// <returns> -1, 0 or 1 for comparison/ordering operations.</returns>
+        /// <param name="obj">Object.</param>
         public int CompareTo(object obj)
         {
             Student compareToObj = (Student)obj;
@@ -96,11 +118,16 @@ namespace DataStructures.BST
             // And if you wanted to do the comparison by eg age:
             // return this.age.CompareTo(compareToObj.age);
         }
-
+        /// <summary>
+        /// Returns a String that represents the current Student.
+        /// Must override ToString or only prints Data Type.
+        /// </summary>
+        /// <returns>A String(Name) that represents the current Student.</returns>
         public override string ToString()
         {
             return Name;
         }
+
     }
 
     /// <summary>
@@ -108,8 +135,6 @@ namespace DataStructures.BST
     /// </summary>
     public class BinarySearchTreeNode<T>
     {
-        public string value;
-
         /// <summary>
         /// Gets the left child of the Binary Search Tree Node.
         /// </summary>
@@ -132,11 +157,6 @@ namespace DataStructures.BST
         public BinarySearchTreeNode(T value)
         {
             Value = value;
-        }
-
-        public BinarySearchTreeNode(string name, string major, string state)
-        {
-            this.Value = name;
         }
     }
 
@@ -217,7 +237,7 @@ namespace DataStructures.BST
                 lastNode.Left = new BinarySearchTreeNode<T>(value);
                 Count++;
             }
-            
+
             else
             {
                 lastNode.Right = new BinarySearchTreeNode<T>(value);
@@ -350,16 +370,23 @@ namespace DataStructures.BST
             return false;
         }
 
+        /// <summary>
+        /// Recursively counts leaf nodes.
+        /// </summary>
+        /// <returns>The leaf nodes.</returns>
+        /// <param name="root">Root.</param>
         public int CountLeafNodes(BinarySearchTreeNode<T> root)
         {
             if (root == null) return 0;
             if (root.Left == null && root.Right == null) return 1;
-            else
-            {
-                return CountLeafNodes(root.Left) + CountLeafNodes(root.Right);
-            }
+            return CountLeafNodes(root.Left) + CountLeafNodes(root.Right);
         }
 
+        /// <summary>
+        /// Height (in nodes) the specified tree.
+        /// </summary>
+        /// <returns>The height.</returns>
+        /// <param name="root">Root.</param>
         public int Height(BinarySearchTreeNode<T> root)
         {
             if (root == null) return 0;
@@ -370,7 +397,10 @@ namespace DataStructures.BST
             return Math.Max(leftHeight, rightHeight) + 1;
         }
 
-
+        /// <summary>
+        /// Prints the preorder.
+        /// </summary>
+        /// <param name="root">Root.</param>
         public void PrintPreorder(BinarySearchTreeNode<T> root)
         {
             if (root != null)
@@ -381,6 +411,10 @@ namespace DataStructures.BST
             }
         }
 
+        /// <summary>
+        /// Prints the inorder.
+        /// </summary>
+        /// <param name="root">Root.</param>
         public virtual void PrintInorder(BinarySearchTreeNode<T> root)
         {
             if (root != null)
@@ -391,6 +425,10 @@ namespace DataStructures.BST
             }
         }
 
+        /// <summary>
+        /// Prints the postorder.
+        /// </summary>
+        /// <param name="root">Root.</param>
         public virtual void PrintPostorder(BinarySearchTreeNode<T> root)
         {
             if (root != null)
