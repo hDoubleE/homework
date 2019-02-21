@@ -134,9 +134,9 @@ namespace DataStructures.BST
             Value = value;
         }
 
-        public BinarySearchTreeNode(string value)
+        public BinarySearchTreeNode(string name, string major, string state)
         {
-            this.value = value;
+            this.Value = name;
         }
     }
 
@@ -217,6 +217,7 @@ namespace DataStructures.BST
                 lastNode.Left = new BinarySearchTreeNode<T>(value);
                 Count++;
             }
+            
             else
             {
                 lastNode.Right = new BinarySearchTreeNode<T>(value);
