@@ -335,6 +335,4 @@ namespace DataStructures
         /// <returns>Bool if list empty.</returns>
         public bool IsEmpty() => Head == null;
     }
-
-
 }

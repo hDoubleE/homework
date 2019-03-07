@@ -9,7 +9,7 @@ namespace DataStructures.BST
         static void Main(string[] args)
         {
             // Create student object:
-            Student Trevor = new Student("Trevor", "Computer Science", "New York");
+            Student Trevor = new Student("Travis", "Computer Science", "New York");
             Student Jean = new Student("Jean", "Mathematics", "West Virginia");
             Student Paul = new Student("Paul", "Data Science", "Georgia");
             Student David = new Student("David", "Undecided", "Massachusetts");
